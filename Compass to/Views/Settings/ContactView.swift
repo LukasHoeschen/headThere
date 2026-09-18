@@ -90,7 +90,7 @@ struct ContactView: View {
     func send() async {
         isSending = true
         
-        guard let url = URL(string: "https://lukas.hoeschen.org/apps/compass-to/api/send_message.php") else { return }
+        guard let url = URL(string: "https://lukas.hoeschen.org/apps/headThere/api/send_message.php") else { return }
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"

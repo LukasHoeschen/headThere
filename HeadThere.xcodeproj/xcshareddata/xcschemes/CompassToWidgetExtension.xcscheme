@@ -18,7 +18,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B1D62774305BE50C0016E196"
                BuildableName = "CompassToWidgetExtension.appex"
-               ReferencedContainer = "container:Compass to.xcodeproj">
+               ReferencedContainer = "container:headThere.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -31,7 +31,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B102BB022CA453F000976332"
                BuildableName = "Compass to.app"
-               ReferencedContainer = "container:Compass to.xcodeproj">
+               ReferencedContainer = "container:headThere.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -63,7 +63,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B1D62774305BE50C0016E196"
             BuildableName = "CompassToWidgetExtension.appex"
-            ReferencedContainer = "container:Compass to.xcodeproj">
+            ReferencedContainer = "container:headThere.xcodeproj">
          </BuildableReference>
       </RemoteRunnable>
       <MacroExpansion>
@@ -71,7 +71,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B102BB022CA453F000976332"
             BuildableName = "Compass to.app"
-            ReferencedContainer = "container:Compass to.xcodeproj">
+            ReferencedContainer = "container:headThere.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <EnvironmentVariables>
@@ -106,7 +106,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B102BB022CA453F000976332"
             BuildableName = "Compass to.app"
-            ReferencedContainer = "container:Compass to.xcodeproj">
+            ReferencedContainer = "container:headThere.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

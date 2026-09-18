@@ -33,7 +33,7 @@ struct LocationSharingService {
 
     private var baseURL: URL? {
         let raw = UserDefaults.standard.string(forKey: "serverBaseURL")
-            ?? "https://lukas.hoeschen.org/apps/compass-to/api/"
+            ?? "https://lukas.hoeschen.org/apps/headThere/api/"
         guard !raw.isEmpty else { return nil }
         return URL(string: raw)
     }

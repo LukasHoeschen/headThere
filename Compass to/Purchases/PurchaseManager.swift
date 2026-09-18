@@ -9,7 +9,7 @@ import Observation
 /// any changes to those call sites.
 @Observable
 final class PurchaseManager {
-    static let proProductID = "org.hoeschen.lukas.Compass-to.pro"
+    static let proProductID = "org.hoeschen.lukas.headThere.pro"
 
     private(set) var product: Product?
     private(set) var isPro: Bool
