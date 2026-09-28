@@ -62,7 +62,7 @@ struct CompassView: View {
         return items.compactMap { item in
             // A person with no successful location sync yet would otherwise sit at
             // the (0,0) placeholder coordinate and show a wildly wrong distance.
-            if item.type == .person && item.lastUpdated == nil { return nil }
+            if item.type == .person && (item.lastUpdated == nil || !item.isReceivingActive) { return nil }
 
             let dist    = item.distance(from: userLoc)
             let bearing = item.bearing(from: userLoc)

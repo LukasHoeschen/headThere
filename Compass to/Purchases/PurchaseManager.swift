@@ -2,7 +2,7 @@ import Foundation
 import StoreKit
 import Observation
 
-/// Handles the "Compass To Pro" non-consumable in-app purchase via StoreKit 2.
+/// Handles the "HeadThere Pro" non-consumable in-app purchase via StoreKit 2.
 ///
 /// Keeps `UserDefaults.standard["isPro"]` in sync with the current entitlement
 /// so existing `@AppStorage("isPro")` reads across the app stay correct without

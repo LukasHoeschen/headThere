@@ -62,6 +62,13 @@ final class TrackedItem: Identifiable {
     // Person: custom server sharing code + their Curve25519 public key (fetched once at pairing time)
     var sharingCode: String?
     var peerPublicKey: Data?
+    // Whether I'm actively publishing my location to them. Independent of whether
+    // I still receive theirs — toggling this off only stops their copy of me.
+    var isSharingBack: Bool = true
+    // False once a fetch explicitly finds no active share from them anymore
+    // (they stopped, rather than just not having synced yet) — lets the UI
+    // show "no longer sharing" instead of silently keeping a stale pin.
+    var isReceivingActive: Bool = true
 
     // Location: what kind of place it is, plus an optional date (e.g. when a vacation starts)
     var placeKind: String = PlaceKind.city.rawValue

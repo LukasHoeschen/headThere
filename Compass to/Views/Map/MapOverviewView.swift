@@ -8,7 +8,7 @@ struct MapOverviewView: View {
 
     var body: some View {
         Map(position: $cameraPosition) {
-            ForEach(items.filter { $0.type != .person || $0.lastUpdated != nil }) { item in
+            ForEach(items.filter { $0.type != .person || ($0.lastUpdated != nil && $0.isReceivingActive) }) { item in
                 if item.type == .person {
                     Annotation(item.name, coordinate: item.coordinate) {
                         PersonLocationMarker(item: item)
@@ -24,7 +24,7 @@ struct MapOverviewView: View {
     }
 
     private func fitAll() {
-        let located = items.filter { $0.type != .person || $0.lastUpdated != nil }
+        let located = items.filter { $0.type != .person || ($0.lastUpdated != nil && $0.isReceivingActive) }
         guard !located.isEmpty else { return }
         if located.count == 1 {
             cameraPosition = .region(

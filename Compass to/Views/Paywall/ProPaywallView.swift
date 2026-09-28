@@ -22,7 +22,7 @@ struct ProPaywallView: View {
                             .font(.system(size: 56))
                             .symbolRenderingMode(.palette)
                             .foregroundStyle(.white, Color.accentColor.gradient)
-                        Text("Compass To Pro")
+                        Text("HeadThere Pro")
                             .font(.largeTitle.bold())
                         Text("Keep an eye on every place and person — without limits.")
                             .font(.subheadline)
@@ -53,7 +53,7 @@ struct ProPaywallView: View {
                     VStack(spacing: 8) {
                         Text("Made by a student")
                             .font(.footnote.bold())
-                        Text("I develop Compass To on my own, alongside my studies. With Pro you directly support further development — and if you have questions, I answer personally.")
+                        Text("I develop HeadThere on my own, alongside my studies. With Pro you directly support further development — and if you have questions, I answer personally.")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)

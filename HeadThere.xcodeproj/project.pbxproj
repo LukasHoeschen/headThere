@@ -38,6 +38,14 @@
 
 /* Begin PBXFileReference section */
 		B102BB032CA453F000976332 /* HeadThere.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HeadThere.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B1BC7FDE306A621E003377D2 /* delete_share.php */ = {isa = PBXFileReference; lastKnownFileType = text.script.php; path = delete_share.php; sourceTree = "<group>"; };
+		B1BC7FDF306A621E003377D2 /* get_key.php */ = {isa = PBXFileReference; lastKnownFileType = text.script.php; path = get_key.php; sourceTree = "<group>"; };
+		B1BC7FE0306A621E003377D2 /* get_location.php */ = {isa = PBXFileReference; lastKnownFileType = text.script.php; path = get_location.php; sourceTree = "<group>"; };
+		B1BC7FE1306A621E003377D2 /* get_shares.php */ = {isa = PBXFileReference; lastKnownFileType = text.script.php; path = get_shares.php; sourceTree = "<group>"; };
+		B1BC7FE2306A621E003377D2 /* migration_shares.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = migration_shares.sql; sourceTree = "<group>"; };
+		B1BC7FE3306A621E003377D2 /* put_key.php */ = {isa = PBXFileReference; lastKnownFileType = text.script.php; path = put_key.php; sourceTree = "<group>"; };
+		B1BC7FE4306A621E003377D2 /* put_location.php */ = {isa = PBXFileReference; lastKnownFileType = text.script.php; path = put_location.php; sourceTree = "<group>"; };
+		B1BC7FE5306A621E003377D2 /* put_share.php */ = {isa = PBXFileReference; lastKnownFileType = text.script.php; path = put_share.php; sourceTree = "<group>"; };
 		B1D62758305B00F60016E196 /* Compass-to-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Compass-to-Info.plist"; sourceTree = "<group>"; };
 		B1D62775305BE50C0016E196 /* CompassToWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CompassToWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1D62777305BE50C0016E196 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = /System/Library/Frameworks/WidgetKit.framework; sourceTree = "<absolute>"; };
@@ -96,6 +104,7 @@
 			children = (
 				B1D6278D305BE5800016E196 /* CompassToWidgetExtension.entitlements */,
 				B1D62758305B00F60016E196 /* Compass-to-Info.plist */,
+				B1BC7FE6306A621E003377D2 /* Server */,
 				B102BB052CA453F000976332 /* Compass to */,
 				B1D6277B305BE50C0016E196 /* CompassToWidget */,
 				B1D62776305BE50C0016E196 /* Frameworks */,
@@ -110,6 +119,21 @@
 				B1D62775305BE50C0016E196 /* CompassToWidgetExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B1BC7FE6306A621E003377D2 /* Server */ = {
+			isa = PBXGroup;
+			children = (
+				B1BC7FDE306A621E003377D2 /* delete_share.php */,
+				B1BC7FDF306A621E003377D2 /* get_key.php */,
+				B1BC7FE0306A621E003377D2 /* get_location.php */,
+				B1BC7FE1306A621E003377D2 /* get_shares.php */,
+				B1BC7FE2306A621E003377D2 /* migration_shares.sql */,
+				B1BC7FE3306A621E003377D2 /* put_key.php */,
+				B1BC7FE4306A621E003377D2 /* put_location.php */,
+				B1BC7FE5306A621E003377D2 /* put_share.php */,
+			);
+			path = Server;
 			sourceTree = "<group>";
 		};
 		B1D62776305BE50C0016E196 /* Frameworks */ = {
@@ -178,7 +202,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2700;
-				LastUpgradeCheck = 1600;
+				LastUpgradeCheck = 2700;
 				TargetAttributes = {
 					B102BB022CA453F000976332 = {
 						CreatedOnToolsVersion = 16.0;
@@ -194,6 +218,7 @@
 			knownRegions = (
 				en,
 				Base,
+				de,
 			);
 			mainGroup = B102BAFA2CA453EF00976332;
 			minimizedProjectReferenceProxies = 1;
@@ -256,6 +281,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -285,7 +311,9 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 6M9RLHG794;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -307,7 +335,9 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -317,6 +347,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -346,7 +377,9 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 6M9RLHG794;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -361,7 +394,9 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
 			name = Release;
 		};
@@ -372,7 +407,8 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Compass to/Compass_to.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 4;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Compass to/Preview Content\"";
 				DEVELOPMENT_TEAM = 6M9RLHG794;
 				ENABLE_PREVIEWS = YES;
@@ -380,8 +416,8 @@
 				INFOPLIST_FILE = "Compass-to-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = HeadThere;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Damit dein Standort auch mit deinen Personen geteilt werden kann, wenn Compass to nicht geöffnet ist, wird dein Standort auch im Hintergrund bei größeren Ortsveränderungen aktualisiert.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Compass to benoetigt deinen Standort, um Richtung und Entfernung zu gespeicherten Orten zu berechnen.";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "So your location can be shared with your people even when HeadThere isn't open, your location is also updated in the background on significant location changes.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "HeadThere needs your location to calculate direction and distance to saved places.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -415,7 +451,8 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Compass to/Compass_to.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 4;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Compass to/Preview Content\"";
 				DEVELOPMENT_TEAM = 6M9RLHG794;
 				ENABLE_PREVIEWS = YES;
@@ -423,8 +460,8 @@
 				INFOPLIST_FILE = "Compass-to-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = HeadThere;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Damit dein Standort auch mit deinen Personen geteilt werden kann, wenn Compass to nicht geöffnet ist, wird dein Standort auch im Hintergrund bei größeren Ortsveränderungen aktualisiert.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Compass to benoetigt deinen Standort, um Richtung und Entfernung zu gespeicherten Orten zu berechnen.";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "So your location can be shared with your people even when HeadThere isn't open, your location is also updated in the background on significant location changes.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "HeadThere needs your location to calculate direction and distance to saved places.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -458,8 +495,8 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = CompassToWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6M9RLHG794;
+				CURRENT_PROJECT_VERSION = 4;
+				DEAD_CODE_STRIPPING = YES;
 				ENABLE_APP_SANDBOX = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CompassToWidget/Info.plist;
@@ -501,8 +538,8 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = CompassToWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6M9RLHG794;
+				CURRENT_PROJECT_VERSION = 4;
+				DEAD_CODE_STRIPPING = YES;
 				ENABLE_APP_SANDBOX = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CompassToWidget/Info.plist;

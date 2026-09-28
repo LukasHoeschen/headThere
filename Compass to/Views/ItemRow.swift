@@ -38,9 +38,15 @@ struct ItemRow: View {
                     }
                 }
                 if item.type == .person, let updated = item.lastUpdated {
-                    Text(updated.formatted(.relative(presentation: .named)))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    if item.isReceivingActive {
+                        Text(updated.formatted(.relative(presentation: .named)))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    } else {
+                        Text("No longer sharing")
+                            .font(.caption)
+                            .foregroundStyle(.orange)
+                    }
                 } else if let countdown = item.countdownText {
                     Text(countdown.capitalized)
                         .font(.caption)

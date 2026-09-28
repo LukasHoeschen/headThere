@@ -11,7 +11,7 @@ struct ContentView: View {
     @State private var userInteracted: Bool = false
     @State private var mapMode: Bool = false
     @State private var mapCameraPosition: MapCameraPosition = .automatic
-    @State private var sheetDetent: PresentationDetent = .medium
+    @State private var sheetDetent: PresentationDetent = .height(200)
     @State private var equidistantMode: Bool = false
 
     @AppStorage("zoomBarOnLeft") private var zoomBarOnLeft: Bool = false
@@ -85,7 +85,7 @@ struct ContentView: View {
                     locationManager: locationManager,
                     onSelect: { selectItem($0) }
                 )
-                .presentationDetents([.height(90), .medium, .large], selection: $sheetDetent)
+                .presentationDetents([.height(80), .height(200), .medium, .large], selection: $sheetDetent)
                 .presentationDragIndicator(.visible)
                 .presentationBackgroundInteraction(.enabled(upThrough: .large))
                 .interactiveDismissDisabled(true)

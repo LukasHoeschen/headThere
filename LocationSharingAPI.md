@@ -112,6 +112,56 @@ GET /users/{ownerCode}/location/{myCode}
 
 Called periodically (e.g. every 30–60s, as long as the app is open/active in the background) to refresh the tracked person's location. `myCode` here is your own code (you're the recipient), `ownerCode` is the code of the person whose location you want to fetch.
 
+**As of v2 (see "Shares" below), endpoint 3 (`PUT .../location/{forCode}`) now requires an active share from `myCode` to `forCode` — it returns `403` without one.** This is what makes sharing implicitly one-sided-to-start instead of requiring both people to add each other.
+
+## v2: Shares — automatic, one-sided pairing
+
+Originally, both people had to add each other's code for sharing to be mutual: A adding B only ever made A publish-to/fetch-from B; B only received A's location if B *also* manually added A. Now, adding someone (entering their code) is enough on its own — the other side is discovered and reciprocates automatically the next time their app syncs, no manual add needed from them.
+
+This adds a third table, `code → { fromCode → nameCiphertext }` ("who is actively sending me their location, and what name did they encrypt for me"), and three endpoints:
+
+### 5. Start sharing your location with someone
+
+```
+PUT /users/{fromCode}/share/{toCode}
+Content-Type: application/json
+
+{ "nameCiphertext": "<base64>" }
+
+→ 200 OK
+```
+
+Called once when adding a person (after fetching their public key), and again whenever "Share my location" is toggled back on for them. `nameCiphertext` is your own display name (see `ownName` in `LocationIdentity`), AES-GCM encrypted with the same pairwise key as locations — so `toCode` can decrypt it and show "you're now receiving Alice's location" without the server ever seeing a plaintext name. Upsert, like endpoint 1.
+
+### 6. Stop sharing your location with someone
+
+```
+DELETE /users/{fromCode}/share/{toCode}
+
+→ 200 OK
+```
+
+Called when "Share my location" is toggled off for a person. Deletes the share row and the last location stored for that pair, so nothing stale remains fetchable afterwards. This does **not** affect the reverse direction — `toCode` may still be actively sharing back with `fromCode` independently.
+
+### 7. Discover who is sharing with you
+
+```
+GET /users/{code}/shares
+
+→ 200 OK
+[
+  { "fromCode": "...", "nameCiphertext": "<base64>", "createdAt": "2026-09-16T18:30:00Z" },
+  ...
+]
+```
+
+Polled alongside the location fetch. For every `fromCode` with no matching local entry yet, the app fetches their public key, decrypts `nameCiphertext` for a display name, and creates the person locally — this is the "automatic, no manual add needed" part. Once discovered, the relationship is symmetric: the app also starts sharing back (endpoint 5) unless the person later toggles that off.
+
+### Two independent ways to stop sharing
+
+- **"Share my location" toggle off** (endpoint 6) — stops *them* receiving *your* location. You keep receiving theirs.
+- **Deleting the person locally** — stops *you* receiving *their* location (purely local; their share to you on the server is untouched until they also stop it). It does not call endpoint 6, so if you still have "Share my location" on for them, they keep receiving yours even after you delete them from your list — turn the toggle off first if you want both stopped.
+
 ## Cryptography on the iPhone (CryptoKit)
 
 ```swift
@@ -148,7 +198,9 @@ The `symmetricKey` is cached locally in the Keychain (per contact/code), so step
 
 ## Notes for the server implementation
 
-- **Data model:** two tables/maps: `code → publicKey` (from endpoint 1/2) and `(code, forCode) → { ciphertext, timestamp }` (from endpoint 3/4). No user login, no passwords — the code *is* the credential.
+- **Data model:** three tables/maps: `code → publicKey` (endpoint 1/2), `(code, forCode) → { ciphertext, timestamp }` (endpoint 3/4), and `(fromCode, toCode) → nameCiphertext` (endpoint 5/6/7, see `Server/migration_shares.sql`). No user login, no passwords — the code *is* the credential.
+- **PHP reference implementation:** see `Server/*.php` in this repo — mirrors the live server's endpoints one-to-one (uses the same `db.php` helpers: `safeCode()`, `getJsonBody()`, `sendError()`, `sendSuccess()`, and a mysqli `$db`). All queries there use prepared statements (`$db->prepare()->bind_param()`), not string interpolation — worth keeping if `db.php`'s `safeCode()` is ever loosened, since two of the original four endpoints (`get_location.php`, `get_key.php`) built SQL by interpolating `$_GET` values with only `safeCode()` and no `real_escape_string()`.
+- **Routing:** this repo only has the leaf PHP files, not whatever maps `users/{code}/key` etc. to them (`.htaccess`/front controller, not checked in here). The three new routes (`PUT`/`DELETE users/{fromCode}/share/{toCode}`, `GET users/{code}/shares`) need to be added there by hand, following the same pattern as the four existing routes.
 - **Code length:** done — `LocationIdentity` generates 16 random characters (excluding 0/O/1/I/L to avoid confusion), no longer the old 8-character UUID-based ones.
 - **Known bug (as of 2026-09-17):** `GET /users/{code}/key` returns `405 Method Not Allowed` on the live server (PUT on the same path works). Without a working GET, nobody can fetch another person's public key — the entire pairing handshake fails, even though the location endpoints (PUT/GET) already work correctly. Needs to be fixed on the server (routing for GET on this path is presumably missing).
 - **No real live tracking:** this is polling, not push. "Good enough" is fine for this project; if real live updates are wanted later, the next step would be a simple WebSocket or a silent push notification that triggers a fetch — but that's v2, not needed now.

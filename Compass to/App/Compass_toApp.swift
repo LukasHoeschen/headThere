@@ -46,7 +46,12 @@ struct Compass_toApp: App {
                         modelContainer: sharedModelContainer,
                         identity: locationIdentity
                     )
-                    try? await LocationSharingService(identity: locationIdentity).registerOwnPublicKey()
+                    do {
+                        try await LocationSharingService(identity: locationIdentity).registerOwnPublicKey()
+                        print("[App][Compass_toApp] registerOwnPublicKey succeeded for code \(locationIdentity.ownCode)")
+                    } catch {
+                        print("[App][Compass_toApp] registerOwnPublicKey failed: \(error)")
+                    }
                 }
         }
         .modelContainer(sharedModelContainer)

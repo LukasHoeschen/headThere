@@ -9,7 +9,7 @@ struct CompassToWidget: Widget {
         AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
             CompassToWidgetEntryView(entry: entry)
         }
-        .configurationDisplayName("Compass To")
+        .configurationDisplayName("HeadThere")
         .description("Shows direction and distance to a place or a person.")
         .supportedFamilies([.systemSmall, .systemMedium])
     }

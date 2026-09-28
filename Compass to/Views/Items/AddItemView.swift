@@ -14,7 +14,12 @@ struct AddItemView: View {
     @AppStorage("isPro") private var isPro: Bool = false
     @State private var showPaywall = false
 
-    @State private var selectedType: TrackedItemType = .location
+    // People can only be added by opening their invite link (nobody types a
+    // 16-character code by hand) — so the type is fully determined by whether
+    // we were opened with a pending code, never a manual choice.
+    private var selectedType: TrackedItemType {
+        initialPersonCode != nil ? .person : .location
+    }
     @State private var name: String = ""
     @State private var selectedColor: String = "#FF6B6B"
 
@@ -32,8 +37,8 @@ struct AddItemView: View {
     @State private var personCode: String = ""
 
     var canConfirm: Bool {
-        !name.trimmingCharacters(in: .whitespaces).isEmpty &&
-        (selectedType == .person || pinCoordinate != nil)
+        guard !name.trimmingCharacters(in: .whitespaces).isEmpty else { return false }
+        return selectedType == .location ? pinCoordinate != nil : !personCode.isEmpty
     }
 
     /// Whether adding the currently selected type would exceed the free-tier limit.
@@ -50,15 +55,6 @@ struct AddItemView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section {
-                    Picker("Type", selection: $selectedType) {
-                        Label("Place", systemImage: "mappin.and.ellipse").tag(TrackedItemType.location)
-                        Label("Person", systemImage: "person.fill").tag(TrackedItemType.person)
-                    }
-                    .pickerStyle(.segmented)
-                    .listRowBackground(Color.clear)
-                }
-
                 Section {
                     TextField("Name", text: $name)
                     ColorPickerRow(selected: $selectedColor)
@@ -91,7 +87,6 @@ struct AddItemView: View {
         .onAppear {
             selectedColor = nextItemColor(count: existingItems.count)
             if let code = initialPersonCode {
-                selectedType = .person
                 personCode = code
             }
         }
@@ -176,18 +171,14 @@ struct AddItemView: View {
 
     @ViewBuilder
     private var personSection: some View {
-        Section("Share Location") {
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Send each other your code (via link) and enter the other person's code here. Locations are exchanged end-to-end encrypted through your own server.")
-                    .font(.caption)
+        Section {
+            LabeledContent("Their Code") {
+                Text(personCode)
+                    .font(.system(.caption, design: .monospaced))
                     .foregroundStyle(.secondary)
             }
-
-            ShareCodeView()
-
-            TextField("Other person's code", text: $personCode)
-                .textInputAutocapitalization(.never)
-                .autocorrectionDisabled()
+        } footer: {
+            Text("Locations are exchanged end-to-end encrypted through your own server. Once you tap Add, you'll automatically start sharing back with them too — no extra step needed.")
         }
     }
 
@@ -242,7 +233,9 @@ struct AddItemView: View {
             item.kind = placeKind
             item.eventDate = hasEventDate ? eventDate : nil
         }
-        let trimmedCode = personCode.trimmingCharacters(in: .whitespacesAndNewlines)
+        // Codes are generated uppercase-only; normalize manually-typed entry so
+        // case doesn't turn a correct code into one the server doesn't recognize.
+        let trimmedCode = personCode.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
         if selectedType == .person && !trimmedCode.isEmpty {
             item.sharingCode = trimmedCode
         }
@@ -255,12 +248,24 @@ struct AddItemView: View {
     }
 
     /// Runs after dismiss so adding a person doesn't block on the network;
-    /// the peer's key just becomes available once this completes.
+    /// the peer's key just becomes available once this completes. Also starts
+    /// sharing my location to them right away — the sync loop would eventually
+    /// do this too, but this avoids waiting for the next cycle.
     private func fetchPeerPublicKey(for item: TrackedItem, code: String) {
         let service = LocationSharingService(identity: identity)
         Task {
-            if let key = try? await service.fetchPublicKey(for: code) {
+            do {
+                let key = try await service.fetchPublicKey(for: code)
                 item.peerPublicKey = key
+                print("[App][AddItemView] fetchPublicKey succeeded for \(code)")
+                do {
+                    try await service.shareLocation(withPeerCode: code, peerPublicKey: key)
+                    print("[App][AddItemView] shareLocation succeeded for \(code)")
+                } catch {
+                    print("[App][AddItemView] shareLocation failed for \(code): \(error)")
+                }
+            } catch {
+                print("[App][AddItemView] fetchPublicKey failed for \(code): \(error)")
             }
         }
     }

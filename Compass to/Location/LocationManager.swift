@@ -71,6 +71,9 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let newLocation = locations.last else { return }
         userLocation = newLocation
+        if syncCoordinator == nil {
+            print("[App][LocationManager] got location update but syncCoordinator is nil, skipping sync")
+        }
         Task { await syncCoordinator?.sync(location: newLocation) }
     }
 

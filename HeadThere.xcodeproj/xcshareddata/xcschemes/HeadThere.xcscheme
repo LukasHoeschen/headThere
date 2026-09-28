@@ -17,7 +17,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B102BB022CA453F000976332"
                BuildableName = "HeadThere.app"
-               ReferencedContainer = "container:headThere.xcodeproj">
+               ReferencedContainer = "container:HeadThere.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,9 +46,12 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B102BB022CA453F000976332"
             BuildableName = "HeadThere.app"
-            ReferencedContainer = "container:headThere.xcodeproj">
+            ReferencedContainer = "container:HeadThere.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <StoreKitConfigurationFileReference
+         identifier = "../../Compass to/HeadThere.storekit">
+      </StoreKitConfigurationFileReference>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -62,7 +65,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B102BB022CA453F000976332"
             BuildableName = "HeadThere.app"
-            ReferencedContainer = "container:headThere.xcodeproj">
+            ReferencedContainer = "container:HeadThere.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

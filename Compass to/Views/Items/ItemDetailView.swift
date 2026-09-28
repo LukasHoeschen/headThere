@@ -1,10 +1,12 @@
 import SwiftUI
 import MapKit
 import CoreLocation
+import SwiftData
 
 struct ItemDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Environment(LocationIdentity.self) private var identity
     let locationManager: LocationManager
 
     @Bindable var item: TrackedItem
@@ -99,10 +101,15 @@ struct ItemDetailView: View {
             }
 
             if item.type == .person {
-                Section("Person") {
+                Section {
                     LabeledContent("Last Update") {
-                        Text(item.lastUpdated.map { $0.formatted(.relative(presentation: .named)) } ?? "Never")
-                            .foregroundStyle(.secondary)
+                        if item.lastUpdated != nil && !item.isReceivingActive {
+                            Text("No longer sharing")
+                                .foregroundStyle(.orange)
+                        } else {
+                            Text(item.lastUpdated.map { $0.formatted(.relative(presentation: .named)) } ?? "Never")
+                                .foregroundStyle(.secondary)
+                        }
                     }
                     if let code = item.sharingCode {
                         LabeledContent("Sharing Code") {
@@ -111,6 +118,14 @@ struct ItemDetailView: View {
                                 .foregroundStyle(.secondary)
                         }
                     }
+                    Toggle("Share My Location", isOn: $item.isSharingBack)
+                        .onChange(of: item.isSharingBack) { _, isSharing in
+                            handleShareToggleChange(isSharing: isSharing)
+                        }
+                } header: {
+                    Text("Person")
+                } footer: {
+                    Text("Turning this off stops \(item.name) from receiving your location, but you'll keep receiving theirs. Deleting them below stops both directions at once.")
                 }
             } else {
                 Section("Map") {
@@ -173,12 +188,19 @@ struct ItemDetailView: View {
         }
         .alert("Delete?", isPresented: $showDeleteAlert) {
             Button("Delete", role: .destructive) {
+                if item.type == .person, let code = item.sharingCode {
+                    stopSharing(withPeerCode: code)
+                }
                 modelContext.delete(item)
                 dismiss()
             }
             Button("Cancel", role: .cancel) {}
         } message: {
-            Text("\"\(item.name)\" will be permanently deleted.")
+            if item.type == .person {
+                Text("\"\(item.name)\" will be permanently deleted. They'll also stop receiving your location.")
+            } else {
+                Text("\"\(item.name)\" will be permanently deleted.")
+            }
         }
         .onAppear {
             if startInEditMode {
@@ -218,6 +240,42 @@ struct ItemDetailView: View {
         editPlaceKind = item.kind
         editHasEventDate = item.eventDate != nil
         editEventDate = item.eventDate ?? Date()
+    }
+
+    /// Fires when the "Share My Location" toggle changes.
+    private func handleShareToggleChange(isSharing: Bool) {
+        guard let code = item.sharingCode else { return }
+        if isSharing {
+            guard let peerKey = item.peerPublicKey else {
+                print("[App][ItemDetailView] can't shareLocation for \(code), no peerPublicKey yet")
+                return
+            }
+            let service = LocationSharingService(identity: identity)
+            Task {
+                do {
+                    try await service.shareLocation(withPeerCode: code, peerPublicKey: peerKey)
+                    print("[App][ItemDetailView] shareLocation succeeded for \(code)")
+                } catch {
+                    print("[App][ItemDetailView] shareLocation failed for \(code): \(error)")
+                }
+            }
+        } else {
+            stopSharing(withPeerCode: code)
+        }
+    }
+
+    /// Stops them receiving my location — called both from the toggle and from
+    /// deleting the person, so deleting doesn't leave a dangling outgoing share.
+    private func stopSharing(withPeerCode code: String) {
+        let service = LocationSharingService(identity: identity)
+        Task {
+            do {
+                try await service.unshareLocation(withPeerCode: code)
+                print("[App][ItemDetailView] unshareLocation succeeded for \(code)")
+            } catch {
+                print("[App][ItemDetailView] unshareLocation failed for \(code): \(error)")
+            }
+        }
     }
 
     private func applyEdits() {
