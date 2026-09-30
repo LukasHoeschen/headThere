@@ -7,8 +7,6 @@ struct ProPaywallView: View {
     private let benefits: [(icon: String, title: String, detail: String)] = [
         ("person.2.fill", "Unlimited People",
          "Free includes \(freePersonLimit) person. With Pro you track as many friends and family as you like."),
-        ("mappin.and.ellipse", "Unlimited Places",
-         "Free includes \(freeLocationLimit) places. With Pro you save as many as you want."),
         ("bell.badge.fill", "Early Access to New Features",
          "New features arrive in Pro first."),
     ]
@@ -24,7 +22,7 @@ struct ProPaywallView: View {
                             .foregroundStyle(.white, Color.accentColor.gradient)
                         Text("HeadThere Pro")
                             .font(.largeTitle.bold())
-                        Text("Keep an eye on every place and person — without limits.")
+                        Text("Track as many people as you like — without limits.")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)

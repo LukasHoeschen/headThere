@@ -49,7 +49,9 @@ final class LocationSyncCoordinator {
         do {
             let incoming = try await service.fetchIncomingShares()
             print("[App][LocationSync] fetchIncomingShares succeeded, \(incoming.count) incoming share(s)")
-            for share in incoming where !people.contains(where: { $0.sharingCode == share.fromCode }) {
+            for share in incoming
+            where share.fromCode != identity.ownCode
+                && !people.contains(where: { $0.sharingCode == share.fromCode }) {
                 let name = share.name?.trimmingCharacters(in: .whitespaces)
                 let newPerson = TrackedItem(
                     name: (name?.isEmpty == false ? name! : share.fromCode),
@@ -111,12 +113,12 @@ final class LocationSyncCoordinator {
             }
 
             do {
-                if let coordinate = try await service.fetchLocation(ownerCode: peerCode, ownerPublicKey: peerKey) {
-                    person.latitude = coordinate.latitude
-                    person.longitude = coordinate.longitude
-                    person.lastUpdated = Date()
+                if let result = try await service.fetchLocation(ownerCode: peerCode, ownerPublicKey: peerKey) {
+                    person.latitude = result.coordinate.latitude
+                    person.longitude = result.coordinate.longitude
+                    person.lastUpdated = result.timestamp
                     person.isReceivingActive = true
-                    print("[App][LocationSync] fetchLocation succeeded for \(peerCode): \(coordinate.latitude), \(coordinate.longitude)")
+                    print("[App][LocationSync] fetchLocation succeeded for \(peerCode): \(result.coordinate.latitude), \(result.coordinate.longitude), published \(result.timestamp)")
                 } else {
                     // Distinguish "never shared yet" from "stopped sharing": only the
                     // latter (we'd received from them before) should surface in the UI.

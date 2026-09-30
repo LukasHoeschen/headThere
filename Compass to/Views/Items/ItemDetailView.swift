@@ -104,7 +104,7 @@ struct ItemDetailView: View {
                 Section {
                     LabeledContent("Last Update") {
                         if item.lastUpdated != nil && !item.isReceivingActive {
-                            Text("No longer sharing")
+                            Text("No longer receiving")
                                 .foregroundStyle(.orange)
                         } else {
                             Text(item.lastUpdated.map { $0.formatted(.relative(presentation: .named)) } ?? "Never")

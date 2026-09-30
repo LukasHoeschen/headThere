@@ -85,7 +85,7 @@ struct ContentView: View {
                     locationManager: locationManager,
                     onSelect: { selectItem($0) }
                 )
-                .presentationDetents([.height(80), .height(200), .medium, .large], selection: $sheetDetent)
+                .presentationDetents([.height(75), .height(200), .medium, .large], selection: $sheetDetent)
                 .presentationDragIndicator(.visible)
                 .presentationBackgroundInteraction(.enabled(upThrough: .large))
                 .interactiveDismissDisabled(true)
@@ -94,7 +94,7 @@ struct ContentView: View {
     }
 
     /// Tapping an item in the list brings it into view — on the map or the compass,
-    /// whichever is currently shown — and collapses the sheet to its smallest
+    /// whichever is currently shown — and collapses the sheet to its second-smallest
     /// detent so the view underneath is actually visible.
     private func selectItem(_ item: TrackedItem) {
         if mapMode {
@@ -105,14 +105,14 @@ struct ContentView: View {
                         span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
                     )
                 )
-                sheetDetent = .height(90)
+                sheetDetent = .height(200)
             }
         } else if let loc = locationManager.userLocation {
             let dist = item.distance(from: loc)
             withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) {
                 zoomDistance = max(dist / 0.65, 100)
                 userInteracted = true
-                sheetDetent = .height(90)
+                sheetDetent = .height(200)
             }
         }
     }

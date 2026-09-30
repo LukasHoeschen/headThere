@@ -12,6 +12,10 @@ $fromCode = safeCode($_GET['fromCode'] ?? '');
 $toCode   = safeCode($_GET['toCode']   ?? '');
 $body     = getJsonBody();
 
+if ($fromCode !== '' && $fromCode === $toCode) {
+    sendError("Can't share with yourself", 400);
+}
+
 $nameCiphertext = $body['nameCiphertext'] ?? null;
 if ($nameCiphertext === null || !is_string($nameCiphertext) || $nameCiphertext === '' || !base64_decode($nameCiphertext, true)) {
     sendError("Invalid nameCiphertext", 400);

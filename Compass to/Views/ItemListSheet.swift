@@ -8,23 +8,12 @@ struct ItemListSheet: View {
     let onSelect: (TrackedItem) -> Void
 
     @Environment(PairingRouter.self) private var pairingRouter
-    @AppStorage("isPro") private var isPro: Bool = false
 
     @State private var showAdd = false
     @State private var showSettings = false
-    @State private var showPaywall = false
     @State private var editingItem: TrackedItem?
     @State private var detailItem: TrackedItem?
     @State private var pendingPairCode: String?
-
-    /// True once both free-tier limits are used up — at that point "+" should go
-    /// straight to the paywall instead of a form that can't actually save anything.
-    private var freeQuotaExhausted: Bool {
-        guard !isPro else { return false }
-        let personCount = items.filter { $0.type == .person }.count
-        let locationCount = items.filter { $0.type == .location }.count
-        return personCount >= freePersonLimit && locationCount >= freeLocationLimit
-    }
 
     private var favoriteItems: [TrackedItem] { items.filter(\.isFavorite) }
     private var peopleItems: [TrackedItem] { items.filter { $0.type == .person && !$0.isFavorite } }
@@ -85,8 +74,7 @@ struct ItemListSheet: View {
                 }
                 ToolbarItem(placement: .primaryAction) {
                     Button {
-                        if freeQuotaExhausted { showPaywall = true }
-                        else { showAdd = true }
+                        showAdd = true
                     } label: {
                         Image(systemName: "plus")
                     }
@@ -98,9 +86,6 @@ struct ItemListSheet: View {
             }
             .sheet(isPresented: $showSettings) {
                 SettingsView()
-            }
-            .sheet(isPresented: $showPaywall) {
-                ProPaywallView()
             }
             .sheet(item: $editingItem) { item in
                 NavigationStack {

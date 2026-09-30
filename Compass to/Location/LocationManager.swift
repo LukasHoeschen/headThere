@@ -21,7 +21,6 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyBest
         manager.headingFilter = 1
-        manager.requestAlwaysAuthorization()
         manager.startUpdatingHeading()
 
         // CLLocationManager reports headings relative to manager.headingOrientation,
@@ -54,6 +53,13 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
         guard let clOrientation = CLDeviceOrientation(rawValue: Int32(orientation.rawValue)),
               clOrientation != .faceUp, clOrientation != .faceDown, clOrientation != .unknown else { return }
         manager.headingOrientation = clOrientation
+    }
+
+    /// Triggers the system permission dialog. Called from onboarding once its
+    /// explanation screen has been shown, rather than automatically on launch,
+    /// so the prompt never appears out of context.
+    func requestPermission() {
+        manager.requestAlwaysAuthorization()
     }
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {

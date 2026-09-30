@@ -36,7 +36,7 @@ struct SettingsView: View {
                             }
                         }
                     } footer: {
-                        Text("Free: \(freePersonLimit) person and \(freeLocationLimit) places. Pro unlocks unlimited.")
+                        Text("Places are always free and unlimited. Free includes \(freePersonLimit) person — Pro unlocks unlimited people.")
                     }
                 }
                 

@@ -69,7 +69,7 @@ struct LocationSharingInfoView: View {
                     )
                     explanation(
                         icon: "exclamationmark.triangle",
-                        title: "\"No longer sharing\"",
+                        title: "\"No longer receiving\"",
                         text: "Shown when someone you were receiving turns their sharing off (or removes you). They disappear from the compass and map so you're never shown an outdated location as if it were current."
                     )
                 }

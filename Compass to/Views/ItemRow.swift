@@ -43,7 +43,7 @@ struct ItemRow: View {
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     } else {
-                        Text("No longer sharing")
+                        Text("No longer receiving")
                             .font(.caption)
                             .foregroundStyle(.orange)
                     }

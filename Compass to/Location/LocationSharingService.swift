@@ -87,9 +87,11 @@ struct LocationSharingService {
         try await put(body, to: url)
     }
 
-    /// Fetches and decrypts the location a contact has published for me.
-    /// Returns nil if they haven't published one yet.
-    func fetchLocation(ownerCode: String, ownerPublicKey: Data) async throws -> CLLocationCoordinate2D? {
+    /// Fetches and decrypts the location a contact has published for me, along
+    /// with when they actually published it — the server never expires a
+    /// published location on its own, so a successful fetch alone doesn't mean
+    /// it's fresh. Returns nil if they haven't published one yet.
+    func fetchLocation(ownerCode: String, ownerPublicKey: Data) async throws -> (coordinate: CLLocationCoordinate2D, timestamp: Date)? {
         guard let base = baseURL else { throw LocationSharingError.noServerConfigured }
         let url = base.appendingPathComponent("users/\(ownerCode)/location/\(identity.ownCode)")
 
@@ -108,7 +110,10 @@ struct LocationSharingService {
         let decrypted = try AES.GCM.open(sealedBox, using: key)
         let coords = try JSONDecoder().decode([String: Double].self, from: decrypted)
         guard let lat = coords["lat"], let lon = coords["lon"] else { return nil }
-        return CLLocationCoordinate2D(latitude: lat, longitude: lon)
+        guard let timestamp = ISO8601DateFormatter().date(from: payload.timestamp) else {
+            throw LocationSharingError.invalidResponse
+        }
+        return (CLLocationCoordinate2D(latitude: lat, longitude: lon), timestamp)
     }
 
     // MARK: Shares (who's actively sending their location to whom)

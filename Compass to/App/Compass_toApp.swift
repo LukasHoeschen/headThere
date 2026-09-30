@@ -33,7 +33,7 @@ struct Compass_toApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
                 .environment(locationManager)
                 .environment(locationIdentity)
                 .environment(pairingRouter)

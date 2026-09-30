@@ -67,7 +67,7 @@ final class TrackedItem: Identifiable {
     var isSharingBack: Bool = true
     // False once a fetch explicitly finds no active share from them anymore
     // (they stopped, rather than just not having synced yet) — lets the UI
-    // show "no longer sharing" instead of silently keeping a stale pin.
+    // show "no longer receiving" instead of silently keeping a stale pin.
     var isReceivingActive: Bool = true
 
     // Location: what kind of place it is, plus an optional date (e.g. when a vacation starts)
@@ -154,9 +154,9 @@ extension Color {
     }
 }
 
-// Free-tier limits — Pro (gated behind @AppStorage("isPro")) removes both.
+// Free-tier limit — places are unlimited and free; Pro only lifts the person
+// limit (gated behind @AppStorage("isPro")).
 let freePersonLimit = 1
-let freeLocationLimit = 5
 
 let itemColorPalette = [
     "#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4",

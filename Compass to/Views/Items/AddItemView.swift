@@ -36,20 +36,24 @@ struct AddItemView: View {
     // Person
     @State private var personCode: String = ""
 
-    var canConfirm: Bool {
-        guard !name.trimmingCharacters(in: .whitespaces).isEmpty else { return false }
-        return selectedType == .location ? pinCoordinate != nil : !personCode.isEmpty
+    private var isOwnCode: Bool {
+        !personCode.isEmpty && personCode.caseInsensitiveCompare(identity.ownCode) == .orderedSame
     }
 
+    var canConfirm: Bool {
+        guard !name.trimmingCharacters(in: .whitespaces).isEmpty else { return false }
+        return selectedType == .location ? pinCoordinate != nil : (!personCode.isEmpty && !isOwnCode)
+    }
+
+    // TODO: manually verify that opening a second invite link (compassto://pair)
+    // while already at 1 free person and not Pro actually shows the paywall
+    // instead of silently adding the person — this is the one path where the
+    // limit check could be bypassed if the sheet presentation changes later.
     /// Whether adding the currently selected type would exceed the free-tier limit.
+    /// Places are unlimited and free; only people are gated.
     private var wouldExceedFreeLimit: Bool {
-        guard !isPro else { return false }
-        switch selectedType {
-        case .person:
-            return existingItems.filter { $0.type == .person }.count >= freePersonLimit
-        case .location:
-            return existingItems.filter { $0.type == .location }.count >= freeLocationLimit
-        }
+        guard !isPro, selectedType == .person else { return false }
+        return existingItems.filter { $0.type == .person }.count >= freePersonLimit
     }
 
     var body: some View {
@@ -178,7 +182,12 @@ struct AddItemView: View {
                     .foregroundStyle(.secondary)
             }
         } footer: {
-            Text("Locations are exchanged end-to-end encrypted through your own server. Once you tap Add, you'll automatically start sharing back with them too — no extra step needed.")
+            if isOwnCode {
+                Text("That's your own code — you can't share your location with yourself.")
+                    .foregroundStyle(.red)
+            } else {
+                Text("Locations are exchanged end-to-end encrypted through your own server. Once you tap Add, you'll automatically start sharing back with them too — no extra step needed.")
+            }
         }
     }
 
